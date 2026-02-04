@@ -4,6 +4,8 @@ import axios from "axios"
 const App = () => {
 
   const [notes,setNotes] = useState([])
+  const [editingId,setEditingId] = useState(null)
+  const [description,setDescription] = useState("")
 
   function fetchNotes(){
     axios.get('https://cohort-2-0-1moi.onrender.com/api/notes')
@@ -40,10 +42,17 @@ const App = () => {
       fetchNotes()
     })
   }
-
+  
   function handleUpdateNote(noteId){
-    // axios.patch("https://cohort-2-0-1moi.onrender.com/api/notes/"+noteId)
-    console.log("update")
+    const newDescription = prompt("Enter new description:- ")
+
+    axios.patch("https://cohort-2-0-1moi.onrender.com/api/notes/"+noteId,{
+      description:newDescription
+    })
+    .then((res)=>{
+      // console.log(res.data);
+      fetchNotes();
+    })
   }
 
   return (
@@ -58,7 +67,7 @@ const App = () => {
     <div className='notes'>
       {
         notes.map((note,index)=>{
-          return <div className='note' key={index}>
+          return <div className='note' key={note._id}>
             <h1>{note.title}</h1>
             <p>{note.description}</p>
             <div className='buttons'> 
